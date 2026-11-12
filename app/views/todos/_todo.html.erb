@@ -1,0 +1,14 @@
+<div id="<%= dom_id todo %>" class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+  <div class="flex justify-between items-start">
+    <div>
+      <h3 class="text-lg font-medium text-gray-900"><%= todo.title %></h3>
+      <p class="text-sm text-gray-600 mt-1"><%= todo.description %></p>
+    </div>
+
+    <div class="text-right text-sm text-gray-600">
+      <div>Due: <span class="font-medium text-gray-800"><%= todo.due_date&.strftime("%B %e, %Y %l:%M %p") %></span></div>
+      <div>Priority: <span class="font-medium"><%= todo.priority %></span></div>
+      <div>Completed: <span class="font-medium"><%= todo.completed ? "Yes" : "No" %></span></div>
+    </div>
+  </div>
+</div>

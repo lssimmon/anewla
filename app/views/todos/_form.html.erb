@@ -1,0 +1,45 @@
+<%= form_with(model: todo, local: true) do |form| %>
+  <% if todo.errors.any? %>
+    <div class="mb-4 rounded-md bg-red-50 border border-red-100 p-3 text-red-800">
+      <h2 class="font-medium"><%= pluralize(todo.errors.count, "error") %> prohibited this todo from being saved:</h2>
+      <ul class="mt-2 list-disc list-inside">
+        <% todo.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-4">
+    <div>
+      <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :title, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200" %>
+    </div>
+
+    <div>
+      <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :description, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200", rows: 4 %>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= form.label :due_date, class: "block text-sm font-medium text-gray-700" %>
+        <%= form.datetime_field :due_date, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+
+      <div>
+        <%= form.label :priority, class: "block text-sm font-medium text-gray-700" %>
+        <%= form.number_field :priority, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm" %>
+      </div>
+    </div>
+
+    <div class="flex items-center">
+      <%= form.check_box :completed, class: "h-4 w-4 text-blue-600" %>
+      <%= form.label :completed, class: "ml-2 text-sm text-gray-700" %>
+    </div>
+
+    <div>
+      <%= form.submit "Save", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
+    </div>
+  </div>
+<% end %>
