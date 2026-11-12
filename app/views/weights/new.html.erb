@@ -1,0 +1,39 @@
+<% content_for :title, "Add Weight" %>
+
+<div class="max-w-xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-semibold">Add Weight</h1>
+    <%= link_to "Back to Health", health_path, class: "text-sm text-blue-600 hover:underline" %>
+  </div>
+
+  <%= form_with model: @weight_entry, url: weights_path, local: true do |form| %>
+    <% if @weight_entry.errors.any? %>
+      <div class="mb-4 rounded-md bg-red-50 border border-red-100 p-3 text-red-800">
+        <ul class="list-disc list-inside">
+          <% @weight_entry.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid gap-4">
+      <div>
+        <%= form.label :recorded_on, "Date", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.date_field :recorded_on, value: (@weight_entry.recorded_on || Date.current), class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200" %>
+      </div>
+
+      <div>
+        <%= label_tag "weight_entry[weight]", "Weight", class: "block text-sm font-medium text-gray-700" %>
+        <div class="mt-1 flex rounded-md shadow-sm">
+          <%= number_field_tag "weight_entry[weight]", @weight_entry.weight, step: "0.1", min: "0", class: "block w-full rounded-l-md border-gray-300 focus:border-blue-300 focus:ring focus:ring-blue-200" %>
+          <%= select_tag "weight_entry[unit]", options_for_select(WeightEntry.unit_options, "lb"), class: "rounded-r-md border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-700 focus:border-blue-300 focus:ring focus:ring-blue-200" %>
+        </div>
+      </div>
+
+      <div>
+        <%= form.submit "Save weight", class: "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+      </div>
+    </div>
+  <% end %>
+</div>

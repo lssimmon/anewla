@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   root "todos#index"
 
+  get "health", to: "health#index", as: :health
+  resources :weights, path: "health/weights", only: %i[index new create]
+
   resources :todos
   resources :users, only: %i[new create]
   resource :session, only: %i[new create destroy]

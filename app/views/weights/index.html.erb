@@ -1,0 +1,94 @@
+<% content_for :title, "Track Weight" %>
+
+<div class="max-w-5xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-3xl font-semibold">Track Weight</h1>
+    <%= link_to "Add weight", new_weight_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700" %>
+  </div>
+
+  <div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+    <%= form_with url: weights_path, method: :get, local: true do %>
+      <div class="flex items-end gap-3">
+        <div>
+          <%= label_tag :unit, "Display unit", class: "block text-sm font-medium text-gray-700" %>
+          <%= select_tag :unit, options_for_select(WeightEntry.unit_options, @unit), class: "mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200" %>
+        </div>
+        <%= submit_tag "Update chart", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @weight_entries.any? %>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+      <div style="height: 320px;">
+        <canvas id="weightChart" data-chart-data='<%= @chart_data.to_json %>'></canvas>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+      <h2 class="text-lg font-semibold mb-3">Recent entries</h2>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <% @weight_entries.reverse_each do |entry| %>
+          <li class="flex justify-between border-b border-gray-100 pb-2 last:border-b-0 last:pb-0">
+            <span><%= entry.recorded_on.strftime("%b %-d, %Y") %></span>
+            <span><%= number_with_precision(entry.display_value(@unit), precision: 1) %> <%= @unit %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-gray-600">
+      No weight entries yet. <%= link_to "Add your first weight", new_weight_path, class: "text-blue-600 hover:underline" %>
+    </div>
+  <% end %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const canvas = document.getElementById("weightChart");
+    if (!canvas) return;
+
+    const chartData = JSON.parse(canvas.dataset.chartData);
+
+    new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: chartData.map((item) => item.label),
+        datasets: [{
+          label: "Weight (<%= @unit %>)",
+          data: chartData.map((item) => item.weight),
+          borderColor: "#2563eb",
+          backgroundColor: "rgba(37, 99, 235, 0.2)",
+          fill: true,
+          tension: 0.2,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Date"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Weight (<%= @unit %>)"
+            },
+            beginAtZero: false
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  });
+</script>

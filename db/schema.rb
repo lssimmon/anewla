@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_10_224318) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_000000) do
   create_table "todos", force: :cascade do |t|
     t.boolean "completed"
     t.datetime "created_at", null: false
@@ -31,5 +31,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_224318) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "weight_entries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "recorded_on", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.decimal "weight", precision: 8, scale: 2, null: false
+    t.index ["user_id", "recorded_on"], name: "index_weight_entries_on_user_id_and_recorded_on"
+    t.index ["user_id"], name: "index_weight_entries_on_user_id"
+  end
+
   add_foreign_key "todos", "users"
+  add_foreign_key "weight_entries", "users"
 end
